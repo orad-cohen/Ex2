@@ -1,67 +1,83 @@
 package dataStructure;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 public class DGraph implements graph{
 
+	private int _id = 0;
+
+	HashMap<Integer,node_data> NodeMap;
+	HashMap<Integer,ArrayList<String>> nodEdge;
+	HashMap<String,edge_data> EdgeMap;
+
 	@Override
 	public node_data getNode(int key) {
-		// TODO Auto-generated method stub
-		return null;
+		return NodeMap.get(key);
 	}
 
 	@Override
 	public edge_data getEdge(int src, int dest) {
-		// TODO Auto-generated method stub
-		return null;
+		String key = src+":"+dest;
+		return EdgeMap.get(key);
 	}
 
 	@Override
 	public void addNode(node_data n) {
-		// TODO Auto-generated method stub
+		Node _node = new Node(_id,n);
+		NodeMap.put(_id++, _node);
 		
 	}
 
 	@Override
 	public void connect(int src, int dest, double w) {
-		// TODO Auto-generated method stub
+		String key = src+":"+dest;
+
 		
 	}
 
 	@Override
 	public Collection<node_data> getV() {
-		// TODO Auto-generated method stub
-		return null;
+
+
+		return NodeMap.values();
 	}
 
 	@Override
 	public Collection<edge_data> getE(int node_id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return EdgeMap.values();
 	}
 
 	@Override
 	public node_data removeNode(int key) {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = (Node)NodeMap.get(key);
+
 	}
 
 	@Override
 	public edge_data removeEdge(int src, int dest) {
-		// TODO Auto-generated method stub
-		return null;
+		String key = src+":"+dest;
+
+		return removeEdge(key);
+	}
+	public edge_data removeEdge(String key){
+
+		return EdgeMap.remove(key);
 	}
 
 	@Override
 	public int nodeSize() {
-		// TODO Auto-generated method stub
-		return 0;
+
+		return NodeMap.size();
 	}
 
 	@Override
 	public int edgeSize() {
-		// TODO Auto-generated method stub
-		return 0;
+
+		return EdgeMap.size();
 	}
 
 	@Override
