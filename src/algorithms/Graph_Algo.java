@@ -12,9 +12,12 @@ import dataStructure.node_data;
  */
 public class Graph_Algo implements graph_algorithms{
 
+	private graph _graph;
+
+
 	@Override
 	public void init(graph g) {
-		// TODO Auto-generated method stub
+		this._graph=g;
 		
 	}
 
@@ -38,14 +41,15 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public double shortestPathDist(int src, int dest) {
-		// TODO Auto-generated method stub
+		_graph.getE(src);
 		return 0;
 	}
 
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
+		List<node_data> path = new List<>();
 		// TODO Auto-generated method stub
-		return null;
+		return path;
 	}
 
 	@Override

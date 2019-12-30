@@ -1,9 +1,6 @@
 package dataStructure;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.*;
 
 public class DGraph implements graph{
 
@@ -11,7 +8,7 @@ public class DGraph implements graph{
 
 	HashMap<Integer,node_data> NodeMap;
 	HashMap<Integer,HashMap<Integer,edge_data>> EdgeMap;
-
+	HashMap<Integer, LinkedList<Integer>> Connected;
 
 	@Override
 	public node_data getNode(int key) {
@@ -20,8 +17,15 @@ public class DGraph implements graph{
 
 	@Override
 	public edge_data getEdge(int src, int dest) {
-		String key = src+":"+dest;
-		return EdgeMap.get(key);
+		try {
+			return EdgeMap.get(src).get(dest);
+		}
+		catch(Exception e){
+			return null;
+		}
+
+
+
 	}
 
 	@Override
@@ -33,9 +37,10 @@ public class DGraph implements graph{
 
 	@Override
 	public void connect(int src, int dest, double w) {
-		String key = src+":"+dest;
-
-		
+		Edge x = new Edge(src,dest,w);
+		Connected.get(src).add(dest);
+		Connected.get(dest).add(src);
+		EdgeMap.get(src).put(dest, x);
 	}
 
 	@Override
@@ -53,20 +58,34 @@ public class DGraph implements graph{
 
 	@Override
 	public node_data removeNode(int key) {
-		Node n = (Node)NodeMap.get(key);
+		Iterator<Integer> Ite = Connected.get(key).iterator();
+		while (Ite.hasNext()){
+			int next = Ite.next();
+			try{
+				removeEdge(key, next);
+			}
+			catch (Exception e){
+				removeEdge(next,key);
+			}
+
+		}
+		return NodeMap.remove(key);
+
+
+
+
+
 
 	}
 
 	@Override
 	public edge_data removeEdge(int src, int dest) {
-		String key = src+":"+dest;
 
-		return removeEdge(key);
-	}
-	public edge_data removeEdge(String key){
+		edge_data tmp = EdgeMap.get(src).remove(dest);
 
-		return EdgeMap.remove(key);
+		return tmp;
 	}
+
 
 	@Override
 	public int nodeSize() {
