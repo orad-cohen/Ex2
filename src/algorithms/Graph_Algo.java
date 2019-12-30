@@ -1,7 +1,10 @@
 package algorithms;
 
+import java.util.Iterator;
 import java.util.List;
 
+import dataStructure.DGraph;
+import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node_data;
 /**
@@ -35,8 +38,52 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public boolean isConnected() {
-		// TODO Auto-generated method stub
-		return false;
+		Iterator<node_data> SrcIte = _graph.getV().iterator();
+
+		while(SrcIte.hasNext()){
+			int count = 0;
+			Iterator<node_data> DestIte = _graph.getV().iterator();
+			int SrcKey = SrcIte.next().getKey();
+			while (DestIte.hasNext()){
+				int DestKey = DestIte.next().getKey();
+				if(SrcKey==DestKey){
+					continue;
+				}
+				else{
+					count+=isConnected(SrcKey,DestKey,0);
+				}
+			}
+			if(count==0){
+				return false;
+			}
+
+		}
+
+
+		return true;
+	}
+
+	public int isConnected(int src,int dest,int count){
+		try{
+			Iterator<edge_data> Emap = _graph.getE(src).iterator();
+			while(Emap.hasNext()){
+				edge_data edge = Emap.next();
+				if((edge.getDest()==dest)){
+					return 1;
+				}
+				else{
+					count+=isConnected(edge.getDest(),dest,count);
+				}
+
+			}
+
+			return count;
+		}
+		catch (Exception e){
+			return  0;
+		}
+
+
 	}
 
 	@Override
@@ -47,9 +94,9 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
-		List<node_data> path = new List<>();
+
 		// TODO Auto-generated method stub
-		return path;
+		return null;
 	}
 
 	@Override
@@ -63,5 +110,21 @@ public class Graph_Algo implements graph_algorithms{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public void RemoveTags(){
+		Iterator<node_data> Nodes = _graph.getV().iterator();
+		while(Nodes.hasNext()){
+			Nodes.next().setTag(0);
+		}
+
+	}
+	public void RemoveEdgeTags(int x){
+		Iterator<edge_data> Edges = _graph.getE(x).iterator();
+		while(Edges.hasNext()){
+			Edges.next().setTag(0);
+		}
+
+	}
+
 
 }

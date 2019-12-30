@@ -6,9 +6,9 @@ public class DGraph implements graph{
 
 	private int _id = 0;
 
-	HashMap<Integer,node_data> NodeMap;
-	HashMap<Integer,HashMap<Integer,edge_data>> EdgeMap;
-	HashMap<Integer, LinkedList<Integer>> Connected;
+	HashMap<Integer,node_data> NodeMap = new HashMap<>();
+	HashMap<Integer,HashMap<Integer,edge_data>> EdgeMap = new HashMap<>();
+	HashMap<Integer, LinkedList<Integer>> Connected = new HashMap<>();
 
 	@Override
 	public node_data getNode(int key) {
@@ -37,6 +37,15 @@ public class DGraph implements graph{
 
 	@Override
 	public void connect(int src, int dest, double w) {
+		if(Connected.get(src)==null){
+			Connected.put(src, new LinkedList<>());
+		}
+		if(Connected.get(dest)==null){
+			Connected.put(dest, new LinkedList<>());
+		}
+		if(EdgeMap.get(src)==null){
+			EdgeMap.put(src, new HashMap<>());
+		}
 		Edge x = new Edge(src,dest,w);
 		Connected.get(src).add(dest);
 		Connected.get(dest).add(src);
@@ -58,15 +67,14 @@ public class DGraph implements graph{
 
 	@Override
 	public node_data removeNode(int key) {
+		Connected.get(2);
 		Iterator<Integer> Ite = Connected.get(key).iterator();
 		while (Ite.hasNext()){
 			int next = Ite.next();
-			try{
-				removeEdge(key, next);
-			}
-			catch (Exception e){
+			if(removeEdge(key, next)==null){
 				removeEdge(next,key);
 			}
+
 
 		}
 		return NodeMap.remove(key);
@@ -80,7 +88,7 @@ public class DGraph implements graph{
 
 	@Override
 	public edge_data removeEdge(int src, int dest) {
-
+		Connected.get(src).remove(dest);
 		edge_data tmp = EdgeMap.get(src).remove(dest);
 
 		return tmp;
