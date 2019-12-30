@@ -10,8 +10,8 @@ public class DGraph implements graph{
 	private int _id = 0;
 
 	HashMap<Integer,node_data> NodeMap;
-	HashMap<Integer,ArrayList<String>> nodEdge;
-	HashMap<String,edge_data> EdgeMap;
+	HashMap<Integer,HashMap<Integer,edge_data>> EdgeMap;
+
 
 	@Override
 	public node_data getNode(int key) {
@@ -48,7 +48,7 @@ public class DGraph implements graph{
 	@Override
 	public Collection<edge_data> getE(int node_id) {
 
-		return EdgeMap.values();
+		return EdgeMap.get(node_id).values();
 	}
 
 	@Override
