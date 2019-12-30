@@ -12,6 +12,17 @@ public class Node implements node_data {
     private int tag;
     private String info;
 
+    public Node(Point3D loc){
+
+        this.loc=loc;
+        this.weight=0;
+        this.tag=0;
+        this.info="info";
+
+
+
+    }
+
 
     public Node(int _id ,node_data n){
         this.key=_id;

@@ -1,17 +1,14 @@
 package dataStructure;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.*;
 
 public class DGraph implements graph{
 
 	private int _id = 0;
 
-	HashMap<Integer,node_data> NodeMap;
-	HashMap<Integer,HashMap<Integer,edge_data>> EdgeMap;
-
+	HashMap<Integer,node_data> NodeMap = new HashMap<>();
+	HashMap<Integer,HashMap<Integer,edge_data>> EdgeMap = new HashMap<>();
+	HashMap<Integer, LinkedList<Integer>> Connected = new HashMap<>();
 
 	@Override
 	public node_data getNode(int key) {
@@ -20,8 +17,15 @@ public class DGraph implements graph{
 
 	@Override
 	public edge_data getEdge(int src, int dest) {
-		String key = src+":"+dest;
-		return EdgeMap.get(key);
+		try {
+			return EdgeMap.get(src).get(dest);
+		}
+		catch(Exception e){
+			return null;
+		}
+
+
+
 	}
 
 	@Override
@@ -33,9 +37,19 @@ public class DGraph implements graph{
 
 	@Override
 	public void connect(int src, int dest, double w) {
-		String key = src+":"+dest;
-
-		
+		if(Connected.get(src)==null){
+			Connected.put(src, new LinkedList<>());
+		}
+		if(Connected.get(dest)==null){
+			Connected.put(dest, new LinkedList<>());
+		}
+		if(EdgeMap.get(src)==null){
+			EdgeMap.put(src, new HashMap<>());
+		}
+		Edge x = new Edge(src,dest,w);
+		Connected.get(src).add(dest);
+		Connected.get(dest).add(src);
+		EdgeMap.get(src).put(dest, x);
 	}
 
 	@Override
@@ -53,20 +67,33 @@ public class DGraph implements graph{
 
 	@Override
 	public node_data removeNode(int key) {
-		Node n = (Node)NodeMap.get(key);
+		Connected.get(2);
+		Iterator<Integer> Ite = Connected.get(key).iterator();
+		while (Ite.hasNext()){
+			int next = Ite.next();
+			if(removeEdge(key, next)==null){
+				removeEdge(next,key);
+			}
+
+
+		}
+		return NodeMap.remove(key);
+
+
+
+
+
 
 	}
 
 	@Override
 	public edge_data removeEdge(int src, int dest) {
-		String key = src+":"+dest;
+		Connected.get(src).remove(dest);
+		edge_data tmp = EdgeMap.get(src).remove(dest);
 
-		return removeEdge(key);
+		return tmp;
 	}
-	public edge_data removeEdge(String key){
 
-		return EdgeMap.remove(key);
-	}
 
 	@Override
 	public int nodeSize() {
