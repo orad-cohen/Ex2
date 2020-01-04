@@ -3,10 +3,8 @@ package algorithms;
 import java.util.Iterator;
 import java.util.List;
 
-import dataStructure.DGraph;
-import dataStructure.edge_data;
-import dataStructure.graph;
-import dataStructure.node_data;
+import dataStructure.*;
+
 /**
  * This empty class represents the set of graph-theory algorithms
  * which should be implemented as part of Ex2 - Do edit this class.
@@ -87,13 +85,22 @@ public class Graph_Algo implements graph_algorithms{
 	}
 
 	@Override
+	// do this
 	public double shortestPathDist(int src, int dest) {
-		_graph.getE(src);
-		return 0;
+		node_data n = _graph.getNode(src);
+		n.setWeight(0);
+
+		
+
+		double answer = 0;
+
+		return answer;
 	}
 
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
+		node_data n = _graph.getNode(src);
+		n.setWeight(0);
 
 		// TODO Auto-generated method stub
 		return null;

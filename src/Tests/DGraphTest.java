@@ -45,7 +45,11 @@ class DGraphTest {
         graph.addNode(n1);;
         graph.addNode(n2);;
         graph.addNode(n3);;
-        graph.addNode(n4);;
+        graph.addNode(n4);
+        node_data n =  graph.getNode(0);
+        System.out.println(graph.getNode(0).getTag());
+        n.setTag(32);
+        System.out.println(graph.getNode(0).getTag());
         assertTrue(true);
     }
 
