@@ -1,18 +1,18 @@
 package algorithms;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Stack;
-
 import dataStructure.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import utils.Point3D;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * This empty class represents the set of graph-theory algorithms
@@ -245,10 +245,64 @@ public class Graph_Algo implements graph_algorithms{
 
 	}
 
-	@Override
 	public double shortestPathDist(int src, int dest) {
-		_graph.getE(src);
-		return 0;
+		try {
+			Stack<node_data> nodeStack = new Stack<>();
+
+			node_data start = _graph.getNode(src);
+			start.setWeight(0);
+			nodeStack.push(start);
+			Iterator<edge_data> edge = _graph.getE(nodeStack.peek().getKey()).iterator();
+			edge_data nextedge;
+			node_data p1;
+			node_data p2;
+			while (!nodeStack.empty()) {
+
+				if(_graph.getE(nodeStack.peek().getKey())==null||nodeStack.peek().getKey()==dest){
+					nodeStack.pop();
+					edge = _graph.getE(nodeStack.peek().getKey()).iterator();
+					continue;
+				}
+				nextedge = edge.next();
+				p1 = nodeStack.peek();
+				p2 = _graph.getNode(nextedge.getDest());
+
+				if(p2.getWeight()>(p1.getWeight()+Distance(p1.getLocation(),p2.getLocation()))){
+					p2.setWeight(p1.getWeight()+Distance(p1.getLocation(),p2.getLocation()));
+					nodeStack.push(p2);
+					if(_graph.getE(nodeStack.peek().getKey())==null){
+						nodeStack.pop();
+						edge = _graph.getE(nodeStack.peek().getKey()).iterator();
+					}
+					else{
+						edge = _graph.getE(nodeStack.peek().getKey()).iterator();
+					}
+
+
+				}
+				else if(edge.hasNext()){
+					continue;
+				}
+
+				else{
+					nodeStack.pop();
+					if(nodeStack.empty()){
+						continue;
+					}
+					else{
+						edge = _graph.getE(nodeStack.peek().getKey()).iterator();
+					}
+
+
+				}
+
+
+			}
+			return _graph.getNode(dest).getWeight();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			return Double.POSITIVE_INFINITY;}
 	}
 
 	@Override
@@ -339,6 +393,9 @@ public class Graph_Algo implements graph_algorithms{
 			Edges.next().setTag(0);
 		}
 
+	}
+	public double Distance(Point3D p1, Point3D p2){
+		return  p1.distance3D(p2);
 	}
 
 

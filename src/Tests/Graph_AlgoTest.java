@@ -98,6 +98,50 @@ class Graph_AlgoTest {
 
     @Test
     void shortestPathDist() {
+        Point3D rand = new Point3D(0, 0);
+        Point3D rand1 = new Point3D(-2, 2);
+        Point3D rand2 = new Point3D(2, 2);
+        Point3D rand3 = new Point3D(1,4 );
+        Point3D rand4 = new Point3D(-2, 6);
+        Point3D rand5 = new Point3D(2, 6);
+        Point3D rand6 = new Point3D(0, 5);
+        Point3D rand7 = new Point3D(1,7 );
+        Node n1 = new Node(rand);
+        Node n2 = new Node(rand1);
+        Node n3= new Node(rand2);
+        Node n4 = new Node(rand3);
+        Node n5 = new Node(rand4);
+        Node n6 = new Node(rand5);
+        Node n7= new Node(rand6);
+        Node n8 = new Node(rand7);
+        DGraph graph = new DGraph();
+        graph.addNode(n1);
+        graph.addNode(n2);
+        graph.addNode(n3);
+        graph.addNode(n4);
+        graph.addNode(n5);
+        graph.addNode(n6);
+        graph.addNode(n7);
+        graph.addNode(n8);
+        graph.connect(0, 1, 0);
+        graph.connect(0, 2, 0);
+        graph.connect(0, 3, 0);
+        graph.connect(1, 4, 0);
+        graph.connect(2, 3, 0);
+        graph.connect(3, 4, 0);
+        graph.connect(2, 5, 0);
+        graph.connect(3, 6, 0);
+        graph.connect(4, 7, 0);
+        graph.connect(4, 5, 0);
+        graph.connect(5, 7, 0);
+        graph.connect(6, 5, 0);
+        graph.connect(6, 7, 0);
+        Graph_Algo algo = new Graph_Algo();
+        algo.init(graph);
+        System.out.println(algo.shortestPathDist(0,7));
+        DrawGraph agraph = new DrawGraph();
+        agraph.Draw(algo.copy());
+
     }
 
     @Test

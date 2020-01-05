@@ -2,9 +2,6 @@ package dataStructure;
 
 import utils.Point3D;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 public class Node implements node_data {
     private int key =Integer.MIN_VALUE;
     private Point3D loc;
@@ -15,7 +12,7 @@ public class Node implements node_data {
     public Node(Point3D loc){
 
         this.loc=loc;
-        this.weight=0;
+        this.weight=Double.POSITIVE_INFINITY;
         this.tag=0;
         this.info="info";
 

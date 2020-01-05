@@ -1,15 +1,6 @@
 package Tests;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import algorithms.*;
-import dataStructure.*;
-import utils.*;
-import gui.*;
+//import gui.*;
 
 /**
  * EX2 Structure test:
@@ -22,7 +13,7 @@ import gui.*;
  * @author boaz.benmoshe
  *
  */
-class Ex2Test {
+/*class Ex2Test {
     private static graph _graph;
     private static graph_algorithms _alg;
     public static final double EPS = 0.001;
@@ -61,4 +52,4 @@ class Ex2Test {
 
     }
 
-}
+}*/
