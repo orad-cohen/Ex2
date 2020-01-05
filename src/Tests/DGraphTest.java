@@ -104,22 +104,23 @@ class DGraphTest {
         graph.addNode(n3);;
         graph.addNode(n4);;
         graph.connect(0, 1, 0);
-        graph.connect(0, 2, 0);
+        graph.connect(1, 2, 0);
+        graph.connect(2, 3, 0);
         graph.connect(3, 0, 0);
-        graph.connect(3, 2, 0);
         Collection<edge_data> n1edge = graph.getE(0);
-        Collection<edge_data> n4edge = graph.getE(3);
+
         Iterator<edge_data> ite1 = n1edge.iterator();
-        Iterator<edge_data> ite4 = n4edge.iterator();
+
         while(ite1.hasNext()){
             Edge e1 = (Edge)ite1.next();
             System.out.println(e1.getSrc()+" to "+e1.getDest());
-        }
-        while(ite4.hasNext()){
-            Edge e4 =(Edge)ite4.next();
-            System.out.println(e4.getSrc()+" to "+e4.getDest());
+            n1edge = graph.getE(e1.getDest());
+            ite1 = n1edge.iterator();
+
+
 
         }
+
 
 
     }

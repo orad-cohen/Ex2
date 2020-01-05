@@ -5,6 +5,7 @@ import java.util.*;
 public class DGraph implements graph{
 
 	private int _id = 0;
+	private int _mc = 0;
 
 	HashMap<Integer,node_data> NodeMap = new HashMap<>();
 	HashMap<Integer,HashMap<Integer,edge_data>> EdgeMap = new HashMap<>();
@@ -30,13 +31,22 @@ public class DGraph implements graph{
 
 	@Override
 	public void addNode(node_data n) {
-		Node _node = new Node(_id,n);
-		NodeMap.put(_id++, _node);
+		_mc++;
+		Node _node;
+		if(n.getKey()==Integer.MIN_VALUE){
+			_node = new Node(_id++,n);
+		}
+		else{
+			_node = new Node(n);
+		}
+
+		NodeMap.put(_node.getKey(), _node);
 		
 	}
 
 	@Override
 	public void connect(int src, int dest, double w) {
+		_mc++;
 		if(Connected.get(src)==null){
 			Connected.put(src, new LinkedList<>());
 		}
@@ -61,12 +71,18 @@ public class DGraph implements graph{
 
 	@Override
 	public Collection<edge_data> getE(int node_id) {
+		if (EdgeMap.containsKey(node_id)){
+			return EdgeMap.get(node_id).values();
+		}
+		else{
+			return null;
+		}
 
-		return EdgeMap.get(node_id).values();
 	}
 
 	@Override
 	public node_data removeNode(int key) {
+		_mc++;
 		Connected.get(2);
 		Iterator<Integer> Ite = Connected.get(key).iterator();
 		while (Ite.hasNext()){
@@ -110,7 +126,7 @@ public class DGraph implements graph{
 	@Override
 	public int getMC() {
 		// TODO Auto-generated method stub
-		return 0;
+		return _mc;
 	}
 
 }

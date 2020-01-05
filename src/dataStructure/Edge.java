@@ -14,6 +14,15 @@ public class Edge implements edge_data{
 
 
     }
+    public Edge(int src, int dest, double weight, int tag, String info){
+        this.src=src;
+        this.dest=dest;
+        this.weight=weight;
+        this.tag=tag;
+        this.info=info;
+
+
+    }
 
 
     @Override
