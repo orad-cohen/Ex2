@@ -1,6 +1,16 @@
 package Tests;
 
-//import gui.*;
+import algorithms.Graph_Algo;
+import algorithms.graph_algorithms;
+import dataStructure.DGraph;
+import dataStructure.graph;
+import gui.*;
+import org.junit.jupiter.api.*;
+
+import utils.Point3D;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * EX2 Structure test:
@@ -13,7 +23,7 @@ package Tests;
  * @author boaz.benmoshe
  *
  */
-/*class Ex2Test {
+class Ex2Test {
     private static graph _graph;
     private static graph_algorithms _alg;
     public static final double EPS = 0.001;
@@ -47,9 +57,10 @@ package Tests;
         return ans;
     }
     boolean drawGraph(graph g) {
-        // YOUR GUI graph draw
+        DrawGraph graph = new DrawGraph(g);
+        graph.Draw();
         return true;
 
     }
 
-}*/
+}
