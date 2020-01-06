@@ -6,6 +6,7 @@ import dataStructure.Node;
 import gui.DrawGraph;
 import org.junit.jupiter.api.Test;
 import utils.Point3D;
+import utils.StdDraw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,18 +36,23 @@ class DrawGraphTest {
         graph.addNode(n5);;
         graph.addNode(n6);;
         graph.addNode(n7);;
-        graph.connect(4, 1, 0);
-        graph.connect(1, 4, 0);
-        graph.connect(1, 6, 0);
+        graph.connect(0, 1, 0);
+        graph.connect(1, 2, 0);
+        graph.connect(2, 3, 0);
+        graph.connect(4, 5, 0);
+        graph.connect(3, 4, 0);
+        graph.connect(5, 6, 0);
         graph.connect(6, 0, 0);
-        graph.connect(6, 2, 0);
-        graph.connect(6, 3, 0);
-        graph.connect(3, 6, 0);
         graph.connect(3, 5, 0);
         graph.connect(5, 3, 0);
         Graph_Algo algo = new Graph_Algo();
         algo.init(graph);
         DrawGraph GraphDraw = new DrawGraph();
-        GraphDraw.Draw(graph);
+        GraphDraw.init(graph);
+        GraphDraw.Draw();
+        StdDraw.pause(124024);
+
+
+
     }
 }

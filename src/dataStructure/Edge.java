@@ -4,7 +4,7 @@ public class Edge implements edge_data{
     private int src,dest;
     private double weight;
     private int tag;
-    private String info;
+    private String info = "info";
 
 
     public Edge(int src, int dest, double weight){

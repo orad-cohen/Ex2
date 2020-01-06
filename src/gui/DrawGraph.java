@@ -1,22 +1,110 @@
 package gui;
 
+import algorithms.Graph_Algo;
 import algorithms.graph_algorithms;
-import dataStructure.edge_data;
-import dataStructure.graph;
-import dataStructure.node_data;
+import dataStructure.*;
 import utils.Point3D;
-import utils.Range;
+
 import utils.StdDraw;
 
+import javax.swing.*;
 import java.awt.*;
+
+import java.awt.event.*;
+import java.io.Serializable;
+import java.util.EventListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class DrawGraph {
+public class DrawGraph implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private Graph_Algo _graphAlgo;
+    private graph _graph;
+
+    public  graph getGraph(){
+        return this._graph;
+    }
+    public DrawGraph()
+    {
+        _graphAlgo=new Graph_Algo();
+        _graph=new DGraph();
+        StdDraw.setGui(this);
+    }
+    public DrawGraph(graph g)
+    {
+        this._graph = g;
+        _graphAlgo=new Graph_Algo();
+        _graphAlgo.init(this._graph);
+        StdDraw.setGui(this);
+    }
+
+    public void Edges(){
+        Iterator<node_data> nodes = _graph.getV().iterator();
+        LinkedList<edge_data> NodeEdges = new LinkedList<>();
+
+        while(nodes.hasNext()){
+            node_data CurNode = nodes.next();
+            Point3D loc = CurNode.getLocation();
+            if(_graph.getE(CurNode.getKey())!=null){
+                Iterator<edge_data> EdgeIte = _graph.getE(CurNode.getKey()).iterator();
+                while(EdgeIte.hasNext()){
+                    NodeEdges.add(EdgeIte.next());
+                }
+            }
+        }
+        for(int  i = 0; i<NodeEdges.size();i++){
+            StdDraw.setPenColor(Color.red);
+            StdDraw.setPenRadius();
+            double x0 = _graph.getNode(NodeEdges.get(i).getSrc()).getLocation().x();
+            double x1 = _graph.getNode(NodeEdges.get(i).getDest()).getLocation().x();
+            double y0 = _graph.getNode(NodeEdges.get(i).getSrc()).getLocation().y();
+            double y1 = _graph.getNode(NodeEdges.get(i).getDest()).getLocation().y();
+            StdDraw.line(x0,y0,x1,y1);
+            double nx;
+            double ny;
+            double midx =(x0+x1)/2;
+            double midy = (y0+y1)/2;
+            if(x0>x1){nx = x0-Math.abs(x0-x1)/10;}
+            else{nx = x0+Math.abs(x0-x1)/10;}
+            if(y0>midy){ny = y0-Math.abs(y0-y1)/10;}
+            else{ny = y0+Math.abs(y0-y1)/10;}
+            StdDraw.text(midx,midy,""+NodeEdges.get(i).getWeight());
+            StdDraw.setPenRadius(0.01);
+            StdDraw.setPenColor(Color.YELLOW);
+            StdDraw.point(nx,ny);
 
 
+
+
+        }
+
+
+
+
+        }
+    public void nodes(){
+        Iterator<node_data> nodes = _graph.getV().iterator();
+        LinkedList<Point3D> NodeLocation = new LinkedList<>();
+        LinkedList<Integer> NodeKey = new LinkedList<>();
+
+        while(nodes.hasNext()){
+            node_data CurNode = nodes.next();
+            Point3D loc = CurNode.getLocation();
+            NodeLocation.add(loc);
+            NodeKey.add(CurNode.getKey());
+        }
+        StdDraw.setPenRadius(0.01);
+        for(int i = 0; i<NodeLocation.size();i++){
+            StdDraw.setPenColor(Color.BLUE);
+            StdDraw.point(NodeLocation.get(i).x(),NodeLocation.get(i).y());
+            StdDraw.setPenColor(Color.BLACK);
+            StdDraw.text(NodeLocation.get(i).x(),NodeLocation.get(i).y()+0.2, ""+NodeKey.get(i));
+        }
+    }
 
     public void Draw(graph g){
+        this._graphAlgo = new Graph_Algo(g);
+        this._graph =g ;
         Iterator<node_data> nodes = g.getV().iterator();
         LinkedList<Point3D> NodeLocation = new LinkedList<>();
         LinkedList<Integer> NodeKey = new LinkedList<>();
@@ -34,58 +122,12 @@ public class DrawGraph {
             Min_x = Math.min(Min_x, loc.x());
             Min_y = Math.min(Min_y, loc.y());
             NodeKey.add(CurNode.getKey());
-            if(g.getE(CurNode.getKey())!=null){
-                Iterator<edge_data> EdgeIte = g.getE(CurNode.getKey()).iterator();
-                while(EdgeIte.hasNext()){
-                    NodeEdges.add(EdgeIte.next());
-                }
-            }
         }
-        Range xx = new Range(Min_x, Max_x);
-        Range yy = new Range(Min_y, Max_y);
-        StdDraw.setCanvasSize(750, 750);
-        StdDraw.setXscale(Min_x-5, Max_x+5);
-        StdDraw.setYscale(Min_y-5,Max_y+5);
-
-        StdDraw.setPenRadius(0.01);
-        for(int i = 0; i<NodeLocation.size();i++){
-            StdDraw.setPenColor(Color.BLUE);
-            StdDraw.point(NodeLocation.get(i).x(),NodeLocation.get(i).y());
-            StdDraw.setPenColor(Color.BLACK);
-            StdDraw.text(NodeLocation.get(i).x(),NodeLocation.get(i).y()+0.2, ""+NodeKey.get(i));
-        }
-
-        double nx;
-        double ny;
-
-        for(int  i = 0; i<NodeEdges.size();i++){
-            StdDraw.setPenColor(Color.red);
-            StdDraw.setPenRadius();
-            double x0 = g.getNode(NodeEdges.get(i).getSrc()).getLocation().x();
-            double x1 = g.getNode(NodeEdges.get(i).getDest()).getLocation().x();
-            double y0 = g.getNode(NodeEdges.get(i).getSrc()).getLocation().y();
-            double y1 = g.getNode(NodeEdges.get(i).getDest()).getLocation().y();
-            StdDraw.line(x0,y0,x1,y1);
-
-            double midx =(x0+x1)/2;
-            double midy = (y0+y1)/2;
-            if(x0>x1){nx = x0-Math.abs(x0-x1)/10;}
-            else{nx = x0+Math.abs(x0-x1)/10;}
-            if(y0>midy){ny = y0-Math.abs(y0-y1)/10;}
-            else{ny = y0+Math.abs(y0-y1)/10;}
-            StdDraw.text(midx,midy,""+NodeEdges.get(i).getWeight());
-            StdDraw.setPenRadius(0.01);
-            StdDraw.setPenColor(Color.YELLOW);
-            StdDraw.point(nx,ny);
-
-
-        }
-
-        StdDraw.pause(200000);
-
-
-
-
+        StdDraw.setCanvasSize((int)(Math.abs(Min_x)+Math.abs(Max_x))+900,(int)(Math.abs(Min_y)+Math.abs(Max_y))+900);
+        StdDraw.setXscale(Min_x-10, Max_x+10);
+        StdDraw.setYscale(Min_y-10, Max_y+10);
+        Edges();
+        nodes();
 
 
 
@@ -93,5 +135,23 @@ public class DrawGraph {
 
 
     }
-
+    public void Draw(){
+        Draw(_graph);
+    }
+    public void init(graph gr)
+    {
+        this._graph = gr;
+        this._graphAlgo._graph = gr;
+    }
+    public void init(String name)
+    {
+        this._graphAlgo.init(name);
+        this._graph=_graphAlgo._graph;
+        Draw();
+    }
+    public Graph_Algo getAlgo(){
+        return this._graphAlgo;
+    }
 }
+
+

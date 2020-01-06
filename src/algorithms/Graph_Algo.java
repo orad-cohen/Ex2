@@ -1,18 +1,18 @@
 package algorithms;
 
-import dataStructure.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import utils.Point3D;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
+
+import dataStructure.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /**
  * This empty class represents the set of graph-theory algorithms
@@ -199,33 +199,56 @@ public class Graph_Algo implements graph_algorithms{
 
 				Iterator<edge_data> edges = _graph.getE(NodeStack.peek().getKey()).iterator();
 				edge_data nextedge= edges.next();
-
+					int t = 1;
 					while(!NodeStack.empty()){
 
 						if(_graph.getE(NodeStack.peek().getKey())==null){
-							NodeStack.pop();
-							//get iterator for current edges
-						}
-						else if(!edges.hasNext()){
-							NodeStack.pop();
+							return false;
 
 							//get iterator for current edges
 						}
+						else if(!edges.hasNext()&&t--<=0){
+							NodeStack.pop();
+							if(!NodeStack.isEmpty()){
+								edges = _graph.getE(NodeStack.peek().getKey()).iterator();
+							}
 
 
-						if(_graph.getNode(nextedge.getDest()).getInfo()=="CTL"){
+							//get iterator for current edges
+						}
+
+
+						else if(_graph.getNode(nextedge.getDest()).getInfo().equals("CTL")){
 							return true;
 						}
 
-						else if(_graph.getNode(nextedge.getDest()).getInfo()!=srcchar){
+						else if(!_graph.getNode(nextedge.getDest()).getInfo().equals(srcchar)){
 							NodeStack.push(_graph.getNode(nextedge.getDest()));
 							_graph.getNode(NodeStack.peek().getKey()).setInfo(srcchar);
 							source.setTag(source.getTag()+1);
+							nextedge.setInfo(srcchar);
 							edges = _graph.getE(NodeStack.peek().getKey()).iterator();
-							nextedge = edges.next();
+							if(edges.hasNext()){
+								nextedge = edges.next();
+							}
 
 
 						}
+						else if(!nextedge.getInfo().equals(srcchar)){
+							NodeStack.push(_graph.getNode(nextedge.getDest()));
+							_graph.getNode(NodeStack.peek().getKey()).setInfo(srcchar);
+
+							nextedge.setInfo(srcchar);
+							edges = _graph.getE(NodeStack.peek().getKey()).iterator();
+							if(edges.hasNext()){
+								nextedge = edges.next();
+							}
+
+						}
+						else if(edges.hasNext()){
+							nextedge = edges.next();
+						}
+
 
 
 					}
@@ -239,7 +262,7 @@ public class Graph_Algo implements graph_algorithms{
 
 				}
 				catch (Exception e){
-
+					e.printStackTrace();
 					return false;
 				}
 
