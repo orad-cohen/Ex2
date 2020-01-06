@@ -16,17 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Graph_AlgoTest {
 
-    @Test
-    void init() {
-    }
 
-    @Test
-    void testInit() {
-        Graph_Algo Graph = new Graph_Algo();
-        Graph.init("wow.json");
-        DrawGraph graph = new DrawGraph();
-        graph.Draw(Graph.copy());
-    }
 
     @Test
     void save() {
@@ -63,7 +53,14 @@ class Graph_AlgoTest {
         graph.connect(5, 3, 0);
         Graph_Algo algo = new Graph_Algo();
         algo.init(graph);
-        algo.save("wow.json");
+        algo.save("SavedGraph.json");
+    }
+    @Test
+    void Init() {
+        Graph_Algo Graph = new Graph_Algo();
+        Graph.init("SavedGraph.json");
+        DrawGraph graph = new DrawGraph();
+        graph.Draw(Graph.copy());
     }
 
     @Test
@@ -87,13 +84,10 @@ class Graph_AlgoTest {
         graph.connect(0, 3, 0);
         Graph_Algo algo = new Graph_Algo();
         algo.init(graph);
+        assertFalse(algo.isConnected());
+        graph.connect(3, 0, 0);
         assertTrue(algo.isConnected());
 
-
-    }
-
-    @Test
-    void testIsConnected() {
     }
 
     @Test
@@ -140,9 +134,36 @@ class Graph_AlgoTest {
         algo.init(graph);
         System.out.println(algo.shortestPathDist(0,7));
         System.out.println(algo.shortestPathDist(0,5));
+        System.out.println(algo.shortestPathDist(2,2));
         DrawGraph agraph = new DrawGraph();
         agraph.Draw(algo.copy());
 
+    }
+
+    @Test
+    void shortestPathDistFailed(){
+        Point3D rand = new Point3D(0, 0);
+        Point3D rand1 = new Point3D(-2, 2);
+        Point3D rand2 = new Point3D(2, 2);
+        Point3D rand3 = new Point3D(1,4 );
+        Node n1 = new Node(rand);
+        Node n2 = new Node(rand1);
+        Node n3= new Node(rand2);
+        Node n4 = new Node(rand3);
+        DGraph graph = new DGraph();
+        graph.addNode(n1);
+        graph.addNode(n2);
+        graph.addNode(n3);
+        graph.addNode(n4);
+        graph.addNode(n4);
+        graph.connect(0, 1, 0);
+        graph.connect(0, 2, 0);
+        graph.connect(3, 4, 0);
+        Graph_Algo algo = new Graph_Algo();
+        algo.init(graph);
+        assertEquals(Double.POSITIVE_INFINITY,algo.shortestPathDist(0,3));
+        DrawGraph agraph = new DrawGraph();
+        agraph.Draw(algo.copy());
     }
 
 
@@ -189,18 +210,54 @@ class Graph_AlgoTest {
         graph.connect(6, 7, 0);
         Graph_Algo algo = new Graph_Algo();
         algo.init(graph);
-        List<node_data> y = algo.shortestPath(0,5);
+
         List<node_data> x = algo.shortestPath(0,7);
+
 
         for(int p=0; p < x.size(); p++)
         {
             System.out.println("Node: "+x.get(p).getKey()+" with weight of "+x.get(p).getWeight());
         }
+        List<node_data> y = algo.shortestPath(0,5);
         System.out.println("\n");
         for(int p=0; p < y.size(); p++)
         {
             System.out.println("Node: "+y.get(p).getKey()+" with weight of "+y.get(p).getWeight());
         }
+        System.out.println("\n");
+        List<node_data> z = algo.shortestPath(0,0);
+        for(int p=0; p < z.size(); p++)
+        {
+            System.out.println("Node: "+z.get(p).getKey()+" with weight of "+z.get(p).getWeight());
+        }
+
+        DrawGraph agraph = new DrawGraph();
+        agraph.Draw(algo.copy());
+    }
+
+    @Test
+    void shortestPathFailed(){
+        Point3D rand = new Point3D(0, 0);
+        Point3D rand1 = new Point3D(-2, 2);
+        Point3D rand2 = new Point3D(2, 2);
+        Point3D rand3 = new Point3D(1,4 );
+        Node n1 = new Node(rand);
+        Node n2 = new Node(rand1);
+        Node n3= new Node(rand2);
+        Node n4 = new Node(rand3);
+        DGraph graph = new DGraph();
+        graph.addNode(n1);
+        graph.addNode(n2);
+        graph.addNode(n3);
+        graph.addNode(n4);
+        graph.addNode(n4);
+        graph.connect(0, 1, 0);
+        graph.connect(0, 2, 0);
+        graph.connect(3, 4, 0);
+        Graph_Algo algo = new Graph_Algo();
+        algo.init(graph);
+        List<node_data> x = algo.shortestPath(0,3);
+        assertNull(x);
 
         DrawGraph agraph = new DrawGraph();
         agraph.Draw(algo.copy());
@@ -253,16 +310,5 @@ class Graph_AlgoTest {
         }
 
 
-
-
-
-
-
-
-
-    }
-
-    @Test
-    void copy() {
     }
 }

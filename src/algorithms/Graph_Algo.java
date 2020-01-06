@@ -135,7 +135,7 @@ public class Graph_Algo implements graph_algorithms{
 			node_data next = IteNode.next();
 			NodeKey.add(next.getKey());
 			NodeLoc.add(next.getLocation().toString());
-			NodeWeight.add(next.getWeight());
+			NodeWeight.add(next.getWeight()==Double.POSITIVE_INFINITY? 0: next.getWeight());
 			NodeTag.add(next.getTag());
 			NodeInfo.add(next.getInfo());
 			if(_graph.getE(next.getKey())!=null){// if there are edges, add those too.
@@ -267,7 +267,7 @@ public class Graph_Algo implements graph_algorithms{
 
 				}
 				catch (Exception e){
-					e.printStackTrace();
+
 					return false;
 				}
 
@@ -275,6 +275,10 @@ public class Graph_Algo implements graph_algorithms{
 
 	public double shortestPathDist(int src, int dest) {
 		try {
+			if(src == dest){
+				return 0;
+			}
+
 			Stack<node_data> nodeStack = new Stack<>();
 
 			node_data start = _graph.getNode(src);
@@ -337,6 +341,12 @@ public class Graph_Algo implements graph_algorithms{
 	public List<node_data> shortestPath(int src, int dest)  {
 		try {
 			RemoveTags();
+			LinkedList<node_data> list = new LinkedList<node_data>();
+			if(src == dest){
+				_graph.getNode(src).setWeight(0);
+				list.add(_graph.getNode(src));
+				return list;
+			}
 			Stack<node_data> nodeStack = new Stack<>();//creates stack of nodes
 
 			node_data start = _graph.getNode(src);//sets src start as the firsy node
@@ -346,8 +356,8 @@ public class Graph_Algo implements graph_algorithms{
 			edge_data nextedge;//edges of the current top node in stack
 			node_data p1;
 			node_data p2;
-			LinkedList<node_data> list = new LinkedList<node_data>();
 			Boolean reached = false;//in case of reaching dest
+
 			int saved = -1;//saves the node at 'crossroad' and sets reached to false until the node is returned to it in stack
 			while (!nodeStack.empty()) {//while the stack is not empty
 

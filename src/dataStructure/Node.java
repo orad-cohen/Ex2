@@ -5,9 +5,9 @@ import utils.Point3D;
 public class Node implements node_data {
     private int key =Integer.MIN_VALUE;
     private Point3D loc;
-    private double weight;
-    private int tag;
-    private String info;
+    private double weight =0;
+    private int tag =0 ;
+    private String info="info";
 
     public Node(Point3D loc){
 
