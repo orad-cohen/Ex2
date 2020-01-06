@@ -46,7 +46,7 @@ public class Graph_Algo implements graph_algorithms{
 		graph g = new DGraph();
 		JSONParser parser = new JSONParser();
 		try{
-			Reader reader = new FileReader(file_name);
+			Reader reader = new FileReader(file_name);//get file into reader And set up all the JSON var
 			JSONObject jsonObject = (JSONObject) parser.parse(reader);
 			JSONArray NodeKey = (JSONArray)jsonObject.get("NodeKey");
 			JSONArray NodeLoc =  (JSONArray)jsonObject.get("NodeLoc");
@@ -64,7 +64,7 @@ public class Graph_Algo implements graph_algorithms{
 			double weight;
 			int tag;
 			int key;
-			while (NodeIte.hasNext()){
+			while (NodeIte.hasNext()){//add the nodes one by one.
 				NodeIte.next();
 				weight = Double.parseDouble(NodeWeight.get(i).toString());
 				tag = Integer.parseInt(NodeTag.get(i).toString());
@@ -78,10 +78,10 @@ public class Graph_Algo implements graph_algorithms{
 			int dest;
 			int nextsrc=Integer.parseInt(EdgeSrc.get(i).toString());
 			int CurEdge = 0;
-			while (i<EdgeSrc.size()){
+			while (i<EdgeSrc.size()){//get the edges
 
 				src =Integer.parseInt(EdgeSrc.get(i).toString());
-				if(nextsrc==src){
+				if(nextsrc==src){//starts connecting, when new src is found set the tag and info of previous edges/
 					weight = Double.parseDouble(EdgeWeight.get(i).toString());
 					dest = Integer.parseInt(EdgeDest.get(i).toString());
 					g.connect(src,dest,weight);
@@ -117,6 +117,7 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public void save(String file_name) {
+		//init the json objects
 		JSONObject Obj = new JSONObject();
 		JSONArray NodeKey = new JSONArray();
 		JSONArray NodeLoc = new JSONArray();
@@ -129,14 +130,15 @@ public class Graph_Algo implements graph_algorithms{
 		JSONArray EdgeTag = new JSONArray();
 		JSONArray EdgeInfo = new JSONArray();
 		Iterator<node_data> IteNode = _graph.getV().iterator();
-		while(IteNode.hasNext()){
+
+		while(IteNode.hasNext()){//for ever nodes, add details to a JSON array
 			node_data next = IteNode.next();
 			NodeKey.add(next.getKey());
 			NodeLoc.add(next.getLocation().toString());
 			NodeWeight.add(next.getWeight());
 			NodeTag.add(next.getTag());
 			NodeInfo.add(next.getInfo());
-			if(_graph.getE(next.getKey())!=null){
+			if(_graph.getE(next.getKey())!=null){// if there are edges, add those too.
 				Iterator<edge_data> IteEdge = _graph.getE(next.getKey()).iterator();
 				while (IteEdge.hasNext()){
 					edge_data nextedge = IteEdge.next();
@@ -149,7 +151,7 @@ public class Graph_Algo implements graph_algorithms{
 				}
 			}
 		}
-		Obj.put("NodeKey", NodeKey);
+		Obj.put("NodeKey", NodeKey);//put in object and save.
 		Obj.put("NodeLoc",NodeLoc);
 		Obj.put("NodeWeight",NodeWeight);
 		Obj.put("NodeTag",NodeTag);
@@ -173,7 +175,7 @@ public class Graph_Algo implements graph_algorithms{
 	public boolean isConnected() {
 		Iterator<node_data> SrcIte = _graph.getV().iterator();
 
-		while(SrcIte.hasNext()){
+		while(SrcIte.hasNext()){//Iterate through every source
 			if(!isConnected(SrcIte.next().getKey())){
 				return false;	}
 
@@ -190,10 +192,10 @@ public class Graph_Algo implements graph_algorithms{
 				NodeStack.push(source);
 
 				source.setTag(0);
-				String srcchar = ""+src;
+				String srcchar = "isConnected:"+src;//prepare the  info it use so it would know on which src it works on
 				source.setInfo(srcchar);
 				try{
-					Iterator<edge_data> iterator= _graph.getE(NodeStack.peek().getKey()).iterator();
+					Iterator<edge_data> iterator= _graph.getE(NodeStack.peek().getKey()).iterator();//if there is a only one node, return true;
 					}
 				catch (Exception e){
 					return _graph.getV().size()==1;
@@ -204,11 +206,11 @@ public class Graph_Algo implements graph_algorithms{
 					int t = 1;
 					while(!NodeStack.empty()){
 
-						if(_graph.getE(NodeStack.peek().getKey())==null){
-							NodeStack.pop();
+						if(_graph.getE(NodeStack.peek().getKey())==null){//if we reached a node without edges, by defenition false.
+							return false;
 							//get iterator for current edges
 						}
-						else if(!edges.hasNext()){
+						else if(!edges.hasNext()){//if we reached the end of the edge list, pop (go to the previous node) and try again
 							NodeStack.pop();
 							if(!NodeStack.isEmpty()){
 								edges = _graph.getE(NodeStack.peek().getKey()).iterator();
@@ -219,15 +221,15 @@ public class Graph_Algo implements graph_algorithms{
 						}
 
 
-						if(_graph.getNode(nextedge.getDest()).getInfo()=="CTL"){
+						if(_graph.getNode(nextedge.getDest()).getInfo()=="CTL"){// if we reached a node who has been checked before, by defenition its true,
 							return true;
 						}
 
-						else if(_graph.getNode(nextedge.getDest()).getInfo()!=srcchar){
-							NodeStack.push(_graph.getNode(nextedge.getDest()));
-							_graph.getNode(NodeStack.peek().getKey()).setInfo(srcchar);
-							source.setTag(source.getTag()+1);
-							nextedge.setInfo(srcchar);
+						else if(_graph.getNode(nextedge.getDest()).getInfo()!=srcchar){//node that hasn't been visited
+							NodeStack.push(_graph.getNode(nextedge.getDest()));//add it to stack
+							_graph.getNode(NodeStack.peek().getKey()).setInfo(srcchar);//change info
+							source.setTag(source.getTag()+1);//increase the tag on source node to mark it has been visited.
+							nextedge.setInfo(srcchar);//change info of edge to. to mark it has been visited.
 							edges = _graph.getE(NodeStack.peek().getKey()).iterator();
 							if(edges.hasNext()){
 								nextedge = edges.next();
@@ -235,8 +237,8 @@ public class Graph_Algo implements graph_algorithms{
 
 
 						}
-						else if(!nextedge.getInfo().equals(srcchar)){
-							NodeStack.push(_graph.getNode(nextedge.getDest()));
+						else if(!nextedge.getInfo().equals(srcchar)){//if we didnt go through that path yet, check it for new nodes.
+							NodeStack.push(_graph.getNode(nextedge.getDest()));//push to track node.
 							_graph.getNode(NodeStack.peek().getKey()).setInfo(srcchar);
 
 							nextedge.setInfo(srcchar);
@@ -255,7 +257,7 @@ public class Graph_Algo implements graph_algorithms{
 
 
 
-			if(_graph.getV().size()-1==source.getTag()){
+			if(_graph.getV().size()-1==source.getTag()){//if we visited all the node tag true.
 				source.setInfo("CTL");//set info as connected to all.
 				return true;
 			}
@@ -413,39 +415,39 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public List<node_data> TSP(List<Integer> targets) {
-		Stack<node_data> NodeStack = new Stack<>();
-		String sourcekey = ""+ targets.get(0);
+		Stack<node_data> NodeStack = new Stack<>();//set up stack and src codes
+		String sourcekey = "TSP:"+ targets.get(0);
 		NodeStack.push(_graph.getNode( targets.get(0)));
-		NodeStack.peek().setInfo("TV");
+		NodeStack.peek().setInfo("TV");//set info as visited target
 		targets.remove(0);
 		Iterator<edge_data> EdgIte = _graph.getE(NodeStack.peek().getKey()).iterator();
 		edge_data CurEdge = EdgIte.next();
-		while(!targets.isEmpty()){
+		while(!targets.isEmpty()){//while we havn't found it all
 
 			if(targets.contains(NodeStack.peek().getKey())){
-				if(_graph.getE(NodeStack.peek().getKey())==null){
+				if(_graph.getE(NodeStack.peek().getKey())==null){//if we got to a target but the target has no edges, null by default
 					return null;
 				}
-				NodeStack.peek().setInfo("TV");
-				targets.remove(Integer.valueOf(NodeStack.peek().getKey()));
+				NodeStack.peek().setInfo("TV");//mark as Target Visited
+				targets.remove(Integer.valueOf(NodeStack.peek().getKey()));//remove from target list;
 
 			}
-			String s =_graph.getNode(CurEdge.getDest()).getInfo();
-			if(s.equals(sourcekey)){
-				if(EdgIte.hasNext()){
+			String s =_graph.getNode(CurEdge.getDest()).getInfo();//for athsetitcs
+			if(s.equals(sourcekey)){//if visited/
+				if(EdgIte.hasNext()){//if it has more edge, go to that edge
 					CurEdge = EdgIte.next();
 				}
 				else{
-					if(NodeStack.peek().getInfo()=="TV"){
+					if(NodeStack.peek().getInfo()=="TV"){//if it has no more edges, but we are in a TV, than null
 						return null;
 					}
 
-					NodeStack.pop();
+					NodeStack.pop();//else go back.
 					EdgIte = _graph.getE(NodeStack.peek().getKey()).iterator();
 				}
 			}
-			else if(s.equals("TV")){
-				if(EdgIte.hasNext()){
+			else if(s.equals("TV")){//if we reached a target
+				if(EdgIte.hasNext()){//go to different edge or go back.
 					CurEdge = EdgIte.next();
 				}
 				else{
@@ -454,7 +456,7 @@ public class Graph_Algo implements graph_algorithms{
 				}
 
 			}
-			else{
+			else{//else its unvisited node, addjust info accordingly.
 				NodeStack.push(_graph.getNode(CurEdge.getDest()));
 				NodeStack.peek().setInfo(""+sourcekey);
 				if(_graph.getE(NodeStack.peek().getKey())==null){
@@ -470,7 +472,7 @@ public class Graph_Algo implements graph_algorithms{
 
 
 	@Override
-	public graph copy() {
+	public graph copy() {//uses the save function for hard copy.
 		save("forCopy");
 		Graph_Algo Copy = new Graph_Algo();
 		Copy.init("forCopy");

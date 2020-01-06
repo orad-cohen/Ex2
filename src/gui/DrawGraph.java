@@ -42,9 +42,8 @@ public class DrawGraph implements Serializable {
         Iterator<node_data> nodes = _graph.getV().iterator();
         LinkedList<edge_data> NodeEdges = new LinkedList<>();
 
-        while(nodes.hasNext()){
+        while(nodes.hasNext()){//get edges into the lniked list
             node_data CurNode = nodes.next();
-            Point3D loc = CurNode.getLocation();
             if(_graph.getE(CurNode.getKey())!=null){
                 Iterator<edge_data> EdgeIte = _graph.getE(CurNode.getKey()).iterator();
                 while(EdgeIte.hasNext()){
@@ -52,8 +51,8 @@ public class DrawGraph implements Serializable {
                 }
             }
         }
-        for(int  i = 0; i<NodeEdges.size();i++){
-            StdDraw.setPenColor(Color.red);
+        for(int  i = 0; i<NodeEdges.size();i++){// draw them 1 by 1.
+            StdDraw.setPenColor(Color.red);//red for edges
             StdDraw.setPenRadius();
             double x0 = _graph.getNode(NodeEdges.get(i).getSrc()).getLocation().x();
             double x1 = _graph.getNode(NodeEdges.get(i).getDest()).getLocation().x();
@@ -64,7 +63,7 @@ public class DrawGraph implements Serializable {
             double ny;
             double midx =(x0+x1)/2;
             double midy = (y0+y1)/2;
-            if(x0>x1){nx = x0-Math.abs(x0-x1)/10;}
+            if(x0>x1){nx = x0-Math.abs(x0-x1)/10;}// Calculation for Drawing edges with the correct orientation
             else{nx = x0+Math.abs(x0-x1)/10;}
             if(y0>midy){ny = y0-Math.abs(y0-y1)/10;}
             else{ny = y0+Math.abs(y0-y1)/10;}
@@ -82,19 +81,19 @@ public class DrawGraph implements Serializable {
 
 
         }
-    public void nodes(){
+    public void nodes(){//for drwaing nodes
         Iterator<node_data> nodes = _graph.getV().iterator();
         LinkedList<Point3D> NodeLocation = new LinkedList<>();
         LinkedList<Integer> NodeKey = new LinkedList<>();
 
-        while(nodes.hasNext()){
+        while(nodes.hasNext()){//put it into linked list
             node_data CurNode = nodes.next();
             Point3D loc = CurNode.getLocation();
             NodeLocation.add(loc);
             NodeKey.add(CurNode.getKey());
         }
         StdDraw.setPenRadius(0.01);
-        for(int i = 0; i<NodeLocation.size();i++){
+        for(int i = 0; i<NodeLocation.size();i++){//draw them by their xy value
             StdDraw.setPenColor(Color.BLUE);
             StdDraw.point(NodeLocation.get(i).x(),NodeLocation.get(i).y());
             StdDraw.setPenColor(Color.BLACK);
@@ -102,18 +101,18 @@ public class DrawGraph implements Serializable {
         }
     }
 
-    public void Draw(graph g){
+    public void Draw(graph g){//Draw everything
         this._graphAlgo = new Graph_Algo(g);
         this._graph =g ;
         Iterator<node_data> nodes = g.getV().iterator();
         LinkedList<Point3D> NodeLocation = new LinkedList<>();
         LinkedList<Integer> NodeKey = new LinkedList<>();
-        LinkedList<edge_data> NodeEdges = new LinkedList<>();
+
         double Max_x=0;
         double Min_x=0;
         double Max_y=0;
         double Min_y=0;
-        while(nodes.hasNext()){
+        while(nodes.hasNext()){//get the max for canvassize
             node_data CurNode = nodes.next();
             Point3D loc = CurNode.getLocation();
             NodeLocation.add(loc);
@@ -123,10 +122,10 @@ public class DrawGraph implements Serializable {
             Min_y = Math.min(Min_y, loc.y());
             NodeKey.add(CurNode.getKey());
         }
-        StdDraw.setCanvasSize((int)(Math.abs(Min_x)+Math.abs(Max_x))+900,(int)(Math.abs(Min_y)+Math.abs(Max_y))+900);
+        StdDraw.setCanvasSize((int)(Math.abs(Min_x)+Math.abs(Max_x))+900,(int)(Math.abs(Min_y)+Math.abs(Max_y))+900);// than draw thee canvas
         StdDraw.setXscale(Min_x-10, Max_x+10);
         StdDraw.setYscale(Min_y-10, Max_y+10);
-        Edges();
+        Edges();//invoke drawing nodes and edges.
         nodes();
 
 
@@ -136,20 +135,20 @@ public class DrawGraph implements Serializable {
 
     }
     public void Draw(){
-        Draw(_graph);
+        Draw(_graph);//Drawing
     }
-    public void init(graph gr)
+    public void init(graph gr)//init from graph
     {
         this._graph = gr;
         this._graphAlgo._graph = gr;
     }
-    public void init(String name)
+    public void init(String name)//init from file.
     {
         this._graphAlgo.init(name);
         this._graph=_graphAlgo._graph;
         Draw();
     }
-    public Graph_Algo getAlgo(){
+    public Graph_Algo getAlgo(){//for STDDRAW
         return this._graphAlgo;
     }
 }
