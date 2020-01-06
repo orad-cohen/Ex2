@@ -1,17 +1,15 @@
 package Tests;
 
-import algorithms.Graph_Algo;
-import algorithms.graph_algorithms;
-import dataStructure.DGraph;
-import dataStructure.graph;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import algorithms.*;
+import dataStructure.*;
+import utils.*;
 import gui.*;
-import org.junit.jupiter.api.*;
-
-import utils.Point3D;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 /**
  * EX2 Structure test:
  * 1. make sure your code compile with this dummy test (DO NOT Change a thing in this test).

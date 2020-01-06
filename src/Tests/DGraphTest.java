@@ -7,6 +7,7 @@ import utils.Point3D;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,25 +33,15 @@ class DGraphTest {
 
 
     @Test
-    void getNode() {
-    }
-
-    @Test
-    void getEdge() {
-    }
-
-    @Test
     void addNode() {
         DGraph graph = new DGraph();
         graph.addNode(n1);;
         graph.addNode(n2);;
         graph.addNode(n3);;
+        assertEquals(graph.nodeSize(),3);
         graph.addNode(n4);
-        node_data n =  graph.getNode(0);
-        System.out.println(graph.getNode(0).getTag());
-        n.setTag(32);
-        System.out.println(graph.getNode(0).getTag());
-        assertTrue(true);
+        assertEquals(graph.nodeSize(),4);
+
     }
 
     @Test
@@ -59,12 +50,17 @@ class DGraphTest {
         graph.addNode(n1);;
         graph.addNode(n2);;
         graph.addNode(n3);;
-        graph.addNode(n4);;
-        graph.connect(n1.getKey(), n2.getKey(), 0);
-        graph.connect(n2.getKey(), n3.getKey(), 0);
-        graph.connect(n3.getKey(), n4.getKey(), 0);
-        graph.connect(n4.getKey(), n1.getKey(), 0);
-        assertTrue(true);
+        graph.addNode(n4);
+        Iterator<node_data> keys = graph.getV().iterator();
+        int n = keys.next().getKey();
+        int c;
+        while(keys.hasNext()){
+            c= keys.next().getKey();
+            graph.connect(n, c, 0);
+            assertNotNull(graph.getE(n));
+            n = c;}
+
+
 
     }
 
@@ -75,18 +71,25 @@ class DGraphTest {
         graph.addNode(n2);;
         graph.addNode(n3);;
         graph.addNode(n4);;
-        graph.connect(n1.getKey(), n2.getKey(), 0);
-        graph.connect(n2.getKey(), n3.getKey(), 0);
-        graph.connect(n3.getKey(), n4.getKey(), 0);
-        graph.connect(n4.getKey(), n1.getKey(), 0);
+        graph.connect(0, 1, 0);
+        graph.connect(1, 2, 0);
+        graph.connect(2, 3, 0);
+        graph.connect(3, 0, 0);
+        Point3D rand = new Point3D(1, 1);
+        Point3D rand1 = new Point3D(2, 2);
+        Point3D rand2 = new Point3D(3, 3);
+        Point3D rand3 = new Point3D(4,4 );
+        LinkedList<Point3D> list = new LinkedList<>();
+        list.add(rand);
+        list.add(rand1);
+        list.add(rand2);
+        list.add(rand3);
 
-        Collection<node_data> col = graph.getV();
-
-        Iterator ite = col.iterator();
+        Iterator<Point3D> listite = list.iterator();
+        Iterator<node_data> ite = graph.getV().iterator();
         while(ite.hasNext()){
-            Node n = (Node)ite.next();
-            Point3D loc = n.getLocation();
-            System.out.println(loc);
+            assertEquals(ite.next().getLocation().toString(), listite.next().toString());
+
 
         }
 
@@ -148,19 +151,7 @@ class DGraphTest {
         }
     }
 
-    @Test
-    void removeEdge() {
-    }
 
-    @Test
-    void nodeSize() {
-    }
 
-    @Test
-    void edgeSize() {
-    }
 
-    @Test
-    void getMC() {
-    }
 }
