@@ -139,6 +139,7 @@ class Graph_AlgoTest {
         Graph_Algo algo = new Graph_Algo();
         algo.init(graph);
         System.out.println(algo.shortestPathDist(0,7));
+        System.out.println(algo.shortestPathDist(0,5));
         DrawGraph agraph = new DrawGraph();
         agraph.Draw(algo.copy());
 
@@ -188,10 +189,17 @@ class Graph_AlgoTest {
         graph.connect(6, 7, 0);
         Graph_Algo algo = new Graph_Algo();
         algo.init(graph);
+        List<node_data> y = algo.shortestPath(0,5);
         List<node_data> x = algo.shortestPath(0,7);
+
         for(int p=0; p < x.size(); p++)
         {
             System.out.println("Node: "+x.get(p).getKey()+" with weight of "+x.get(p).getWeight());
+        }
+        System.out.println("\n");
+        for(int p=0; p < y.size(); p++)
+        {
+            System.out.println("Node: "+y.get(p).getKey()+" with weight of "+y.get(p).getWeight());
         }
 
         DrawGraph agraph = new DrawGraph();

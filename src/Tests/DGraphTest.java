@@ -99,29 +99,24 @@ class DGraphTest {
     @Test
     void getE() {
         DGraph graph = new DGraph();
-        graph.addNode(n1);;
-        graph.addNode(n2);;
-        graph.addNode(n3);;
-        graph.addNode(n4);;
+        graph.addNode(n1);
+        graph.addNode(n2);
+        graph.addNode(n3);
+        graph.addNode(n4);
+
         graph.connect(0, 1, 0);
+        graph.connect(0, 2, 0);
+        graph.connect(0, 3, 0);
+        graph.connect(1, 1, 0);
         graph.connect(1, 2, 0);
         graph.connect(2, 3, 0);
-        graph.connect(3, 0, 0);
         Collection<edge_data> n1edge = graph.getE(0);
-
-        Iterator<edge_data> ite1 = n1edge.iterator();
-
-        while(ite1.hasNext()){
-            Edge e1 = (Edge)ite1.next();
-            System.out.println(e1.getSrc()+" to "+e1.getDest());
-            n1edge = graph.getE(e1.getDest());
-            ite1 = n1edge.iterator();
-
-
-
-        }
-
-
+            Iterator<edge_data> ite1 = n1edge.iterator();
+            edge_data nextedge = ite1.next();
+            while (ite1.hasNext()) {
+                System.out.println(nextedge.getSrc() + " -> " + nextedge.getDest());
+                nextedge = ite1.next();
+            }
 
     }
 

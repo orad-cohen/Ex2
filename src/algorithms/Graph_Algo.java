@@ -336,6 +336,7 @@ public class Graph_Algo implements graph_algorithms{
 	@Override
 	public List<node_data> shortestPath(int src, int dest)  {
 		try {
+			RemoveTags();
 			Stack<node_data> nodeStack = new Stack<>();//creates stack of nodes
 
 			node_data start = _graph.getNode(src);//sets src start as the firsy node
@@ -484,7 +485,9 @@ public class Graph_Algo implements graph_algorithms{
 	public void RemoveTags(){
 		Iterator<node_data> Nodes = _graph.getV().iterator();
 		while(Nodes.hasNext()){
-			Nodes.next().setTag(0);
+			node_data next = Nodes.next();
+			next.setTag(0);
+			next.setWeight(Double.POSITIVE_INFINITY);
 		}
 
 	}
