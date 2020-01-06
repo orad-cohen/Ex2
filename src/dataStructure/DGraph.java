@@ -95,11 +95,6 @@ public class DGraph implements graph{
 		}
 		return NodeMap.remove(key);
 
-
-
-
-
-
 	}
 
 	@Override

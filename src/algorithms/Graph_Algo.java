@@ -1,18 +1,20 @@
 package algorithms;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Stack;
-
 import dataStructure.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import utils.Point3D;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
+
 
 /**
  * This empty class represents the set of graph-theory algorithms
@@ -22,7 +24,7 @@ import org.json.simple.parser.JSONParser;
  */
 public class Graph_Algo implements graph_algorithms{
 
-	private graph _graph;
+	public graph _graph;
 
 
 	public Graph_Algo(){
@@ -203,11 +205,10 @@ public class Graph_Algo implements graph_algorithms{
 					while(!NodeStack.empty()){
 
 						if(_graph.getE(NodeStack.peek().getKey())==null){
-							return false;
-
+							NodeStack.pop();
 							//get iterator for current edges
 						}
-						else if(!edges.hasNext()&&t--<=0){
+						else if(!edges.hasNext()){
 							NodeStack.pop();
 							if(!NodeStack.isEmpty()){
 								edges = _graph.getE(NodeStack.peek().getKey()).iterator();
@@ -218,11 +219,11 @@ public class Graph_Algo implements graph_algorithms{
 						}
 
 
-						else if(_graph.getNode(nextedge.getDest()).getInfo().equals("CTL")){
+						if(_graph.getNode(nextedge.getDest()).getInfo()=="CTL"){
 							return true;
 						}
 
-						else if(!_graph.getNode(nextedge.getDest()).getInfo().equals(srcchar)){
+						else if(_graph.getNode(nextedge.getDest()).getInfo()!=srcchar){
 							NodeStack.push(_graph.getNode(nextedge.getDest()));
 							_graph.getNode(NodeStack.peek().getKey()).setInfo(srcchar);
 							source.setTag(source.getTag()+1);
@@ -249,9 +250,11 @@ public class Graph_Algo implements graph_algorithms{
 							nextedge = edges.next();
 						}
 
+						}
 
 
-					}
+
+
 			if(_graph.getV().size()-1==source.getTag()){
 				source.setInfo("CTL");//set info as connected to all.
 				return true;
@@ -282,34 +285,34 @@ public class Graph_Algo implements graph_algorithms{
 			while (!nodeStack.empty()) {
 
 				if(_graph.getE(nodeStack.peek().getKey())==null||nodeStack.peek().getKey()==dest){
-					nodeStack.pop();
-					edge = _graph.getE(nodeStack.peek().getKey()).iterator();
-					continue;
+					nodeStack.pop();//if the top node has no edges or an edge that leads to the destination node
+					edge = _graph.getE(nodeStack.peek().getKey()).iterator();//pop it and ignore, then go to to the next
+					continue;//edge
 				}
-				nextedge = edge.next();
-				p1 = nodeStack.peek();
-				p2 = _graph.getNode(nextedge.getDest());
+				nextedge = edge.next();//starts with an (possibly next one) edge from the node
+				p1 = nodeStack.peek();//p1 is the current top node
+				p2 = _graph.getNode(nextedge.getDest());//p2 is the node that the p1 edge leads to
 
-				if(p2.getWeight()>(p1.getWeight()+Distance(p1.getLocation(),p2.getLocation()))){
-					p2.setWeight(p1.getWeight()+Distance(p1.getLocation(),p2.getLocation()));
-					nodeStack.push(p2);
-					if(_graph.getE(nodeStack.peek().getKey())==null){
-						nodeStack.pop();
+				if(p2.getWeight()>(p1.getWeight()+Distance(p1.getLocation(),p2.getLocation()))){//if p2 weight current weight is bigger then the weight of p1+distance of edge
+					p2.setWeight(p1.getWeight()+Distance(p1.getLocation(),p2.getLocation()));//set p1+distance as the new weight of p2
+					nodeStack.push(p2);//then push that node to the node stack
+					if(_graph.getE(nodeStack.peek().getKey())==null){//if the new top node of stack, p2 has no edges...
+						nodeStack.pop();//kill it from the stack... it has no further service!
+						edge = _graph.getE(nodeStack.peek().getKey()).iterator();//return back to the edges of the previous node in stack
+					}
+					else{//if p2 has edges then set iterator to iterate through the new edges of the new top node p2
 						edge = _graph.getE(nodeStack.peek().getKey()).iterator();
 					}
-					else{
-						edge = _graph.getE(nodeStack.peek().getKey()).iterator();
-					}
 
 
 				}
-				else if(edge.hasNext()){
-					continue;
+				else if(edge.hasNext()){//if the weight of p2 is smaller or the same then carry on as normal and move to the next edge
+					continue;//IF IT HAS A NEXT EDGE
 				}
 
-				else{
+				else{//if it's out of edges then proceed to POP a cap in that B**** A** and carry on to the next node in the stack
 					nodeStack.pop();
-					if(nodeStack.empty()){
+					if(nodeStack.empty()){//if node stack is empty then carry on, the loop requirements shall deal with it...
 						continue;
 					}
 					else{
@@ -329,10 +332,83 @@ public class Graph_Algo implements graph_algorithms{
 	}
 
 	@Override
-	public List<node_data> shortestPath(int src, int dest) {
+	public List<node_data> shortestPath(int src, int dest)  {
+		try {
+			Stack<node_data> nodeStack = new Stack<>();//creates stack of nodes
 
-		// TODO Auto-generated method stub
-		return null;
+			node_data start = _graph.getNode(src);//sets src start as the firsy node
+			start.setWeight(0);//gives it personal weight of 0
+			nodeStack.push(start); //pushes it to the stack
+			Iterator<edge_data> edge = _graph.getE(nodeStack.peek().getKey()).iterator();//creates iterator for all the
+			edge_data nextedge;//edges of the current top node in stack
+			node_data p1;
+			node_data p2;
+			LinkedList<node_data> list = new LinkedList<node_data>();
+			Boolean reached = false;//in case of reaching dest
+			int saved = -1;//saves the node at 'crossroad' and sets reached to false until the node is returned to it in stack
+			while (!nodeStack.empty()) {//while the stack is not empty
+
+				if(_graph.getE(nodeStack.peek().getKey())==null||nodeStack.peek().getKey()==dest){
+					nodeStack.pop();//if the top node has no edges or an edge that leads to the destination node
+					edge = _graph.getE(nodeStack.peek().getKey()).iterator();//pop it and ignore, then go to to the next
+					continue;//edge
+				}
+				nextedge = edge.next();//starts with an (possibly next one) edge from the node
+				p1 = nodeStack.peek();//p1 is the current top node
+				p2 = _graph.getNode(nextedge.getDest());//p2 is the node that the p1 edge leads to
+
+				if(p2.getWeight()>(p1.getWeight()+Distance(p1.getLocation(),p2.getLocation()))){
+					//if p2 weight current weight is bigger then the weight of p1+distance of edge
+					p2.setWeight(p1.getWeight()+Distance(p1.getLocation(),p2.getLocation()));//set p1+distance as the new weight of p2
+					nodeStack.push(p2);//then push that node to the node stack
+					if(p2.getKey() == dest){//if the node at end of edge is edge AND is the shortest one
+						reached = true;//set reached true
+						list.clear();//clear the list
+						list.add(p2);//add dest to list
+						}
+					if(_graph.getE(nodeStack.peek().getKey())==null){//if the new top node of stack, p2 has no edges...
+						nodeStack.pop();//kill it from the stack... it has no further service!
+						edge = _graph.getE(nodeStack.peek().getKey()).iterator();//return back to the edges of the previous node in stack
+					}
+					else{//if p2 has edges then set iterator to iterate through the new edges of the new top node p2
+						edge = _graph.getE(nodeStack.peek().getKey()).iterator();
+					}
+
+
+				}
+				else if(edge.hasNext()){//if the weight of p2 is smaller or the same then carry on as normal and move to the next edge
+					if(reached == true) {//crossroad, if this node connects with an ongoing list then...
+						reached = false;//save the node and set reached to false until returned to the node when it is out of edges
+						saved = p1.getKey();
+					}
+					continue;//IF IT HAS A NEXT EDGE
+				}
+
+				else{//if it's out of edges then proceed to POP a cap in that B**** A** and carry on to the next node in the stack
+					if(reached == false && saved > -1 && p1.getKey()==saved){//if reached is false and there is a "saved node" with no more edges
+						saved = -1;//unset save
+						reached = true;//and return reached to true to continue the adding of nodes
+					}
+					if(reached == true) {//if reached is true with no more edges then add it to the list before poping the stack
+						list.addFirst(p1);
+					}
+					nodeStack.pop();
+					if(nodeStack.empty()){//if node stack is empty then carry on, the loop requirements shall deal with it...
+						continue;
+					}
+					else{//if the stack still has nodes then set the iterator to work for the new toppest node
+						edge = _graph.getE(nodeStack.peek().getKey()).iterator();
+					}
+				}
+			}
+			if(list.size() == 0){return null;}
+			else {
+				return list;//return the list
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			return null;}
 	}
 
 	@Override
